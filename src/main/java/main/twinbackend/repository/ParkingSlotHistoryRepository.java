@@ -16,7 +16,7 @@ public interface ParkingSlotHistoryRepository extends JpaRepository<ParkingSlotH
     List<ParkingSlotHistory> findByStatus(String status);
     Page<ParkingSlotHistory> findByStatus(String status, Pageable pageable);
 
-    List<ParkingSlotHistory> findAllByOrderByTimestampDesc();
+    List<ParkingSlotHistory> findTop10ByOrderByTimestampDesc();
 
     Optional<ParkingSlotHistory> findFirstByIdAndStatusOrderByUniqueIdDesc(String id, String status);
 

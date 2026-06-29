@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParkingSlotHistoryDto {
-    private String uniqueId;
     private Integer frameId;
     private String id; // Slot ID code (e.g. A01, D03)
     private Integer occupied; // 1 = occupied, 0 = vacant
