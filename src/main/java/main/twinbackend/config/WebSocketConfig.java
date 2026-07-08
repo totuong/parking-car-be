@@ -11,12 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
-    private final ParkingWebSocketHandler parkingWebSocketHandler;
+    private final ParkingWebSocketHandler parkingHandler;
+    private final AuthHandshakeInterceptor authHandshakeInterceptor;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 
-        registry.addHandler(parkingWebSocketHandler, "/ws/parking")
+        registry.addHandler(parkingHandler, "/ws/parking")
+                .addInterceptors(authHandshakeInterceptor)
                 .setAllowedOrigins("*");
     }
 
