@@ -1,9 +1,9 @@
-version: "3.9"
-
 services:
-
-  parking-backend:
-    build: .
+  backend:
+    image: tuongtd02/parking-backend:1.0
     container_name: parking-backend
+
     ports:
       - "8080:8080"
+
+    restart: unless-stopped
