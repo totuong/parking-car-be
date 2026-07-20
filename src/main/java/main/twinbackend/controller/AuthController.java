@@ -6,11 +6,13 @@ import main.twinbackend.dto.RegisterRequest;
 import main.twinbackend.entity.UserAccount;
 import main.twinbackend.repository.UserAccountRepository;
 import main.twinbackend.service.JwtService;
+import main.twinbackend.service.TokenStore;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,7 +71,33 @@ public class AuthController {
         }
 
         String token = jwtService.generateToken(account.getUsername());
+        TokenStore.save(token);
 
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    @PostMapping({"/logout", "/revoke"})
+    public ResponseEntity<?> logout(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody(required = false) Map<String, String> body) {
+
+        String token = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7).trim();
+        } else if (body != null && body.containsKey("token")) {
+            token = body.get("token");
+        }
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Thiếu token để thu hồi");
+        }
+
+        TokenStore.revoke(token);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Thu hồi token thành công (Đã đăng xuất)"
+        ));
     }
 }

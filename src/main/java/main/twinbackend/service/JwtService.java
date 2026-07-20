@@ -32,6 +32,9 @@ public class JwtService {
     }
 
     public boolean validate(String token) {
+        if (token == null || TokenStore.isRevoked(token)) {
+            return false;
+        }
 
         try {
 
